@@ -1,0 +1,51 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión · Panel {{ STORE_NAME }}</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } },
+        };
+    </script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-slate-100 text-slate-900 font-sans antialiased px-4">
+
+<div class="w-full max-w-sm bg-white border border-slate-200 rounded-xl p-6">
+    <div class="flex justify-center mb-4">
+        <img src="{% static 'img/logo.png' %}" alt="{{ STORE_NAME }}" class="h-20 w-auto rounded-lg">
+    </div>
+    <p class="text-xs uppercase tracking-wide text-slate-400 mb-1 text-center">🔒 Panel de administración</p>
+    <h1 class="text-xl font-semibold text-slate-900 mb-6 text-center">{{ STORE_NAME }}</h1>
+
+    {% if form.errors %}
+        <div class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 mb-4">
+            Usuario o contraseña incorrectos.
+        </div>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
+            <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" autofocus
+                   class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+        </div>
+        <div>
+            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+            <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}"
+                   class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+        </div>
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit" class="w-full px-4 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 hover:scale-[1.02] transition-all">Entrar →</button>
+    </form>
+</div>
+
+</body>
+</html>

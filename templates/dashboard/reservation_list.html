@@ -1,0 +1,54 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold text-slate-900 mb-6">Reservas</h1>
+
+    <form method="get" class="flex flex-wrap gap-3 mb-4">
+        <select name="status" onchange="this.form.submit()" class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+            <option value="">Todos los estados</option>
+            {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+                <tr>
+                    <th class="px-4 py-3">Prenda</th>
+                    <th class="px-4 py-3">Cliente</th>
+                    <th class="px-4 py-3">Teléfono</th>
+                    <th class="px-4 py-3">Cantidad</th>
+                    <th class="px-4 py-3">Estado</th>
+                    <th class="px-4 py-3">Vence</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for reservation in reservations %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-slate-900">
+                            {{ reservation.variant.product.name }}
+                            <span class="block text-xs text-slate-400">{{ reservation.variant.sku }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">{{ reservation.customer_name }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ reservation.customer_phone }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ reservation.quantity }}</td>
+                        <td class="px-4 py-3">
+                            {% if reservation.status == 'active' %}
+                                <span class="text-xs text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">{{ reservation.get_status_display }}</span>
+                            {% else %}
+                                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{{ reservation.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">{{ reservation.expires_at }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-4 py-6 text-center text-slate-500">No hay reservas.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

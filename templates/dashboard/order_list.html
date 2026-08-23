@@ -1,0 +1,79 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold text-slate-900 mb-6">Pedidos</h1>
+
+    <form method="get" class="flex flex-wrap gap-3 mb-4">
+        <select name="status" onchange="this.form.submit()" class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+            <option value="">Todos los estados</option>
+            {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+                <tr>
+                    <th class="px-4 py-3">Pedido</th>
+                    <th class="px-4 py-3">Cliente</th>
+                    <th class="px-4 py-3">Artículos</th>
+                    <th class="px-4 py-3">Total</th>
+                    <th class="px-4 py-3">Comprobante</th>
+                    <th class="px-4 py-3">Estado</th>
+                    <th class="px-4 py-3">Fecha</th>
+                    <th class="px-4 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for order in orders %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-slate-900">#{{ order.id }}</td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ order.customer_name }}
+                            <span class="block text-xs text-slate-400">{{ order.customer_phone }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {% for item in order.items.all %}
+                                <span class="block">{{ item.quantity }}× {{ item.variant.sku }}</span>
+                            {% endfor %}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">${{ order.total }}</td>
+                        <td class="px-4 py-3">
+                            {% if order.payment_proof %}
+                                <a href="{{ order.payment_proof.url }}" target="_blank" rel="noopener" class="text-slate-600 hover:text-slate-900 underline">🖼️ Ver foto</a>
+                            {% else %}
+                                <span class="text-slate-400">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3">
+                            {% if order.status == 'paid' %}
+                                <span class="text-xs text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">{{ order.get_status_display }}</span>
+                            {% else %}
+                                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{{ order.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">{{ order.created_at }}</td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            {% if order.status == 'pending' %}
+                                <form method="post" action="{% url 'dashboard:order_mark_paid' order.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-emerald-700 hover:text-emerald-900 hover:scale-105 transition-transform mr-3 inline-block">✅ Marcar como pagado</button>
+                                </form>
+                                <form method="post" action="{% url 'dashboard:order_reject' order.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-600 hover:text-red-800 hover:scale-105 transition-transform inline-block">❌ Rechazar</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="px-4 py-6 text-center text-slate-500">No hay pedidos.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

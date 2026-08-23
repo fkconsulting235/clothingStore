@@ -1,0 +1,49 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <h1 class="text-xl font-semibold text-slate-900">Cuentas bancarias</h1>
+        <a href="{% url 'dashboard:bank_account_create' %}" class="px-4 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 hover:scale-105 transition-all">+ Nueva cuenta</a>
+    </div>
+    <p class="text-sm text-slate-500 mb-6">Estas son las cuentas que ve el cliente al pagar por depósito/transferencia. Solo las "Visibles" aparecen en el checkout.</p>
+
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+                <tr>
+                    <th class="px-4 py-3">Banco</th>
+                    <th class="px-4 py-3">Tipo</th>
+                    <th class="px-4 py-3">Número</th>
+                    <th class="px-4 py-3">A nombre de</th>
+                    <th class="px-4 py-3">Estado</th>
+                    <th class="px-4 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for account in bank_accounts %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-slate-900">🏦 {{ account.bank_name }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ account.account_type|default:"—" }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ account.account_number }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ account.holder_name }}</td>
+                        <td class="px-4 py-3">
+                            {% if account.is_active %}
+                                <span class="text-xs text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">Visible</span>
+                            {% else %}
+                                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full">Oculta</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            <a href="{% url 'dashboard:bank_account_edit' account.id %}" class="text-slate-600 hover:text-slate-900 mr-3">✏️ Editar</a>
+                            <a href="{% url 'dashboard:bank_account_delete' account.id %}" class="text-red-600 hover:text-red-800">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-4 py-6 text-center text-slate-500">Todavía no hay cuentas bancarias.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

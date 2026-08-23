@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="mb-10 rounded-2xl bg-slate-900 text-white px-6 py-10 sm:px-10 sm:py-14 text-center">
+        <p class="text-xs uppercase tracking-widest text-slate-400 mb-2">Bienvenido a</p>
+        <h1 class="text-2xl sm:text-3xl font-semibold mb-3">{{ STORE_NAME }}</h1>
+        <p class="text-sm text-slate-300 max-w-md mx-auto">Encuentra tu prenda favorita, resérvala por 24 horas o agrégala al carrito y págala directo desde aquí.</p>
+    </div>
+
+    {% for category in categories %}
+        <section class="mb-12">
+            <div class="flex items-baseline justify-between mb-4">
+                <h2 class="text-xl font-semibold text-slate-900 relative inline-block after:content-[''] after:block after:w-8 after:h-0.5 after:bg-slate-900 after:mt-1">{{ category.name }}</h2>
+                <a href="{% url 'catalog:category' category.slug %}" class="text-sm text-slate-500 hover:text-slate-900 hover:underline transition-colors">Ver todo →</a>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for product in category.products.all %}
+                    {% if product.is_active %}
+                        {% include "catalog/_product_card.html" %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    {% empty %}
+        <p class="text-slate-500">Todavía no hay categorías publicadas.</p>
+    {% endfor %}
+{% endblock %}

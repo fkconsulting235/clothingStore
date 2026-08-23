@@ -1,0 +1,68 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel · {{ STORE_NAME }}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-900 font-sans antialiased">
+
+<header class="bg-slate-900 text-slate-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+            <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2">
+                <img src="{% static 'img/favicon.png' %}" alt="{{ STORE_NAME }}" class="h-8 w-8 rounded">
+                <span class="text-lg font-semibold tracking-tight">Panel</span>
+            </a>
+            <span class="text-slate-500 text-sm">· {{ STORE_NAME }}</span>
+        </div>
+        <nav class="flex items-center gap-1 text-sm text-slate-300">
+            <a href="{% url 'dashboard:home' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name == 'home' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">🏠 Inicio</a>
+            <a href="{% url 'dashboard:product_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name in 'product_list product_create product_edit product_delete' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">👕 Prendas</a>
+            <a href="{% url 'dashboard:category_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name in 'category_list category_create category_edit category_delete' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">🏷️ Categorías</a>
+            <a href="{% url 'dashboard:reservation_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name == 'reservation_list' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">⏱ Reservas</a>
+            <a href="{% url 'dashboard:order_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name in 'order_list order_mark_paid order_reject' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">📦 Pedidos</a>
+            <a href="{% url 'dashboard:bank_account_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name in 'bank_account_list bank_account_create bank_account_edit bank_account_delete' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">🏦 Cuentas</a>
+        </nav>
+        <div class="flex items-center gap-4 text-sm">
+            <a href="{% url 'catalog:home' %}" target="_blank" rel="noopener" class="text-slate-300 hover:text-white transition-colors">Ver tienda</a>
+            <form method="post" action="{% url 'dashboard:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="text-slate-300 hover:text-white transition-colors">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+{% if messages %}
+    <div class="max-w-6xl mx-auto w-full px-4 sm:px-6 pt-4">
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 mb-2">{{ message }}</div>
+            {% else %}
+                <div class="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 mb-2">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<main class="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-8">
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

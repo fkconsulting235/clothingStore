@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="grid md:grid-cols-2 gap-10">
+        <div>
+            <div class="aspect-square bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
+                {% if product.main_image %}
+                    <img id="main-product-image" src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-opacity duration-200">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-5xl text-slate-300">🖼️</div>
+                {% endif %}
+            </div>
+            {% if product.images.count > 1 %}
+                <div class="grid grid-cols-4 gap-2 mt-2">
+                    {% for image in product.images.all %}
+                        <button type="button" onclick="swapMainImage('{{ image.image.url }}', this)"
+                                class="thumb-btn aspect-square bg-slate-100 rounded-lg overflow-hidden border-2 {% if forloop.first %}border-slate-900{% else %}border-transparent{% endif %} hover:border-slate-400 transition-colors">
+                            <img src="{{ image.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                        </button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <p class="text-xs uppercase tracking-wide text-slate-400 mb-1">Código {{ product.code }}</p>
+            <h1 class="text-2xl font-semibold text-slate-900">{{ product.name }}</h1>
+            <p class="text-lg font-semibold text-slate-900 mt-2">${{ product.base_price }}</p>
+
+            {% if product.description %}
+                <p class="text-sm text-slate-600 mt-4 leading-relaxed">{{ product.description }}</p>
+            {% endif %}
+
+            <h2 class="text-sm font-semibold text-slate-900 mt-8 mb-3">Colores y tallas disponibles</h2>
+            <div class="space-y-2">
+                {% for variant in product.variants.all %}
+                    <div class="rounded-lg border border-slate-200 hover:border-slate-300 transition-colors p-4">
+                        <div class="flex items-center justify-between gap-3">
+                            <div>
+                                <p class="font-medium text-slate-900">{{ variant.color }} · {{ variant.size }}</p>
+                                <p class="text-xs text-slate-400">{{ variant.sku }}</p>
+                            </div>
+                            {% if variant.available_stock > 0 %}
+                                <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full whitespace-nowrap">{{ variant.available_stock }} disp.</span>
+                            {% else %}
+                                <span class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full whitespace-nowrap">Agotado</span>
+                            {% endif %}
+                        </div>
+
+                        {% if variant.available_stock > 0 %}
+                            <div class="flex flex-wrap items-center gap-2 mt-3">
+                                <a href="{% url 'reservations:create' variant.id %}" class="px-3 py-1.5 rounded-md border border-slate-900 text-slate-900 text-xs font-medium hover:bg-slate-900 hover:text-white transition-colors">⏱ Reservar 24h</a>
+                                <form method="post" action="{% url 'orders:cart_add' variant.id %}" class="flex items-center gap-1.5 ml-auto">
+                                    {% csrf_token %}
+                                    <div class="flex items-center border border-slate-300 rounded-md overflow-hidden">
+                                        <button type="button" onclick="adjustQty(this, -1)" class="px-2 py-1.5 text-slate-500 hover:bg-slate-100 transition-colors">−</button>
+                                        <input type="number" name="quantity" value="1" min="1" max="{{ variant.available_stock }}"
+                                               class="w-10 text-center text-xs border-0 focus:ring-0 focus:outline-none">
+                                        <button type="button" onclick="adjustQty(this, 1)" class="px-2 py-1.5 text-slate-500 hover:bg-slate-100 transition-colors">+</button>
+                                    </div>
+                                    <button type="submit" class="px-3 py-1.5 rounded-md bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 hover:scale-105 transition-all">🛒 Agregar</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="px-4 py-3 text-sm text-slate-500">Todavía no hay variantes registradas para esta prenda.</p>
+                {% endfor %}
+            </div>
+
+            {% if WHATSAPP_NUMBER %}
+                <a href="https://wa.me/{{ WHATSAPP_NUMBER }}?text={{ whatsapp_message|urlencode }}" target="_blank" rel="noopener"
+                   class="mt-6 inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-[#25D366] text-white text-sm font-medium hover:opacity-90 hover:scale-[1.02] transition-all">
+                    💬 Consultar por WhatsApp
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_head %}
+    <script>
+        function swapMainImage(src, btn) {
+            const img = document.getElementById('main-product-image');
+            if (img) { img.src = src; }
+            document.querySelectorAll('.thumb-btn').forEach((el) => el.classList.remove('border-slate-900'));
+            document.querySelectorAll('.thumb-btn').forEach((el) => el.classList.add('border-transparent'));
+            btn.classList.remove('border-transparent');
+            btn.classList.add('border-slate-900');
+        }
+
+        function adjustQty(btn, delta) {
+            const input = btn.parentElement.querySelector('input[type="number"]');
+            const min = parseInt(input.min || '1', 10);
+            const max = parseInt(input.max || '9999', 10);
+            let value = parseInt(input.value || '1', 10) + delta;
+            value = Math.max(min, Math.min(max, value));
+            input.value = value;
+        }
+    </script>
+{% endblock %}

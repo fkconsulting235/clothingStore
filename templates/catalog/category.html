@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold text-slate-900 mb-6">{{ category.name }}</h1>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {% for product in products %}
+            {% include "catalog/_product_card.html" %}
+        {% empty %}
+            <p class="text-slate-500 col-span-full">Todavía no hay prendas en esta categoría.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

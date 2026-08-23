@@ -1,0 +1,45 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold text-slate-900 mb-6">Inicio</h1>
+
+    <h2 class="text-sm font-semibold text-slate-900 mb-3">💰 Ventas</h2>
+    <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-500 mb-1">☀️ Vendido hoy</p>
+            <p class="text-2xl font-semibold text-slate-900">${{ sales_today }}</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-500 mb-1">📅 Vendido este mes</p>
+            <p class="text-2xl font-semibold text-slate-900">${{ sales_month }}</p>
+        </div>
+        <div class="bg-slate-900 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-400 mb-1">🏆 Vendido en total</p>
+            <p class="text-2xl font-semibold text-white">${{ sales_total }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-500 mb-1">👕 Prendas publicadas</p>
+            <p class="text-2xl font-semibold text-slate-900">{{ total_products }}</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-500 mb-1">🏷️ Categorías activas</p>
+            <p class="text-2xl font-semibold text-slate-900">{{ total_categories }}</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-500 mb-1">⏱ Reservas activas</p>
+            <p class="text-2xl font-semibold text-slate-900">{{ active_reservations }}</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+            <p class="text-xs text-slate-500 mb-1">✅ Pedidos pagados</p>
+            <p class="text-2xl font-semibold text-slate-900">{{ paid_orders }}</p>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+        <a href="{% url 'dashboard:product_create' %}" class="px-4 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 hover:scale-105 transition-all">+ Nueva prenda</a>
+        <a href="{% url 'dashboard:category_create' %}" class="px-4 py-2.5 rounded-md border border-slate-300 text-slate-700 text-sm font-medium hover:bg-slate-50 hover:scale-105 transition-all">+ Nueva categoría</a>
+    </div>
+{% endblock %}

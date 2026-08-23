@@ -1,0 +1,46 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <h1 class="text-xl font-semibold text-slate-900">Categorías</h1>
+        <a href="{% url 'dashboard:category_create' %}" class="px-4 py-2.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 hover:scale-105 transition-all">+ Nueva categoría</a>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+                <tr>
+                    <th class="px-4 py-3">Nombre</th>
+                    <th class="px-4 py-3">Orden</th>
+                    <th class="px-4 py-3">Prendas</th>
+                    <th class="px-4 py-3">Estado</th>
+                    <th class="px-4 py-3"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for category in categories %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-slate-900">{{ category.name }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ category.order }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ category.products.count }}</td>
+                        <td class="px-4 py-3">
+                            {% if category.is_active %}
+                                <span class="text-xs text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">Visible</span>
+                            {% else %}
+                                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full">Oculta</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            <a href="{% url 'dashboard:category_edit' category.id %}" class="text-slate-600 hover:text-slate-900 mr-3">✏️ Editar</a>
+                            <a href="{% url 'dashboard:category_delete' category.id %}" class="text-red-600 hover:text-red-800">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-4 py-6 text-center text-slate-500">Todavía no hay categorías.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <div class="max-w-md bg-white border border-slate-200 rounded-xl p-6">
+        <h1 class="text-lg font-semibold text-slate-900 mb-2">⚠️ ¿Eliminar esta prenda?</h1>
+        <p class="text-sm text-slate-600 mb-6">
+            <strong>{{ product.code }} · {{ product.name }}</strong> se eliminará junto con todas sus variantes e imágenes. Esta acción no se puede deshacer.
+        </p>
+        <form method="post" class="flex items-center gap-3">
+            {% csrf_token %}
+            <button type="submit" class="px-4 py-2.5 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700 hover:scale-105 transition-all">Sí, eliminar</button>
+            <a href="{% url 'dashboard:product_list' %}" class="text-sm text-slate-500 hover:text-slate-700">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}
