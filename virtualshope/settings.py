@@ -72,18 +72,23 @@ WSGI_APPLICATION = 'virtualshope.wsgi.application'
 
 # Database
 
-DB_HOST = config('DB_HOST', default='')
-DB_ENGINE = config('DB_ENGINE', default='postgresql')  # 'postgresql' o 'mysql'
+
+def env(name, default=''):
+    return config(name, default=default).strip()
+
+
+DB_HOST = env('DB_HOST')
+DB_ENGINE = env('DB_ENGINE', default='postgresql')  # 'postgresql' o 'mysql'
 
 if DB_HOST and DB_ENGINE == 'mysql':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'HOST': DB_HOST,
-            'PORT': config('DB_PORT', default='3306'),
-            'NAME': config('DB_NAME', default=''),
-            'USER': config('DB_USER', default=''),
-            'PASSWORD': config('DB_PASSWORD', default=''),
+            'PORT': env('DB_PORT', default='3306'),
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
             'OPTIONS': {'charset': 'utf8mb4'},
         }
     }
@@ -92,10 +97,10 @@ elif DB_HOST:
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'HOST': DB_HOST,
-            'PORT': config('DB_PORT', default='5432'),
-            'NAME': config('DB_NAME', default='postgres'),
-            'USER': config('DB_USER', default='postgres'),
-            'PASSWORD': config('DB_PASSWORD', default=''),
+            'PORT': env('DB_PORT', default='5432'),
+            'NAME': env('DB_NAME', default='postgres'),
+            'USER': env('DB_USER', default='postgres'),
+            'PASSWORD': env('DB_PASSWORD'),
             'OPTIONS': {'sslmode': 'require'},
         }
     }
