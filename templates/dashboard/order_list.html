@@ -1,4 +1,5 @@
 {% extends "dashboard/base.html" %}
+{% load store_extras %}
 
 {% block content %}
     <h1 class="text-xl font-semibold text-slate-900 mb-6">Pedidos</h1>
@@ -39,7 +40,7 @@
                                 <span class="block">{{ item.quantity }}× {{ item.variant.sku }}</span>
                             {% endfor %}
                         </td>
-                        <td class="px-4 py-3 text-slate-600">{{ STORE_CURRENCY_SYMBOL }}{{ order.total }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ STORE_CURRENCY_SYMBOL }}{{ order.total|money }}</td>
                         <td class="px-4 py-3">
                             {% if order.payment_proof %}
                                 <a href="{{ order.payment_proof.url }}" target="_blank" rel="noopener" class="text-slate-600 hover:text-slate-900 underline">🖼️ Ver foto</a>

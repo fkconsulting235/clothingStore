@@ -1,3 +1,4 @@
+{% load store_extras %}
 <a href="{{ product.get_absolute_url }}" class="group block bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 transition-all duration-200">
     <div class="aspect-square bg-slate-100 overflow-hidden">
         {% if product.main_image %}
@@ -9,6 +10,6 @@
     <div class="p-3">
         <p class="text-[11px] text-slate-400 mb-1 tracking-wide">{{ product.code }}</p>
         <h3 class="text-sm font-medium text-slate-900 truncate group-hover:text-slate-700">{{ product.name }}</h3>
-        <p class="text-sm font-semibold text-slate-900 mt-1">{{ STORE_CURRENCY_SYMBOL }}{{ product.base_price }}</p>
+        <p class="text-sm font-semibold text-slate-900 mt-1">{{ STORE_CURRENCY_SYMBOL }}{{ product.base_price|money }}</p>
     </div>
 </a>
