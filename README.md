@@ -95,3 +95,43 @@ El proyecto ya está listo para producción: `gunicorn` como servidor WSGI, `whi
 5. Deploy. Cuando termine, entra a `https://tu-dominio.onrender.com/panel/` con tu usuario admin (el mismo que ya existe en Supabase, porque la base de datos es la misma).
 
 **Sobre las fotos subidas (prendas y comprobantes de pago)**: por ahora el proyecto guarda esos archivos en el disco del propio servicio de Render, el cual **se borra en cada despliegue o reinicio** (es la opción gratis). Para una demo está bien; cuando el negocio ya esté pagando, agrega un **Persistent Disk** en la configuración del servicio en Render (unos $1/mes por GB) montado en la carpeta `media/` y las fotos dejan de perderse — no requiere ningún cambio de código, solo configurarlo en el dashboard de Render.
+
+## Desplegar en cPanel (sin terminal/SSH)
+
+Si tu hosting es cPanel con **Setup Python App** (CloudLinux Python Selector) pero sin acceso a Terminal/SSH, el proyecto ya está preparado para eso: `passenger_wsgi.py` corre las migraciones, recolecta los archivos estáticos y crea el superusuario automáticamente cada vez que la app arranca — no hace falta ejecutar ningún comando a mano. La base de datos usa MySQL (`PyMySQL`, no requiere compilar nada) en vez de SQLite/Postgres.
+
+1. **Crea la base de datos en cPanel** (si no lo hiciste ya): **MySQL Databases** → crea una base y un usuario, asígnale todos los privilegios. Anota el nombre de la base y del usuario — cPanel les pone el prefijo de tu cuenta automáticamente (ej. `cpaneluser_tienda` y `cpaneluser_tiendauser`). El host casi siempre es `localhost`.
+
+2. **Crea la aplicación de Python**: en cPanel → **Setup Python App** → **Create Application**. Elige la versión de Python más reciente disponible (3.11+), define el **App Root** (una carpeta nueva, ej. `tienda_kei`) y el dominio/subdominio donde vivirá la tienda. No toques ninguna app existente que no sea esta.
+
+3. **Sube el código a esa carpeta**, sin usar terminal:
+   - Si tu cPanel tiene **Git Version Control**: apunta a tu repositorio de GitHub y clónalo directo en el **App Root** que creaste en el paso 2.
+   - Si no: descarga el proyecto como `.zip` desde GitHub (botón verde **Code → Download ZIP**), súbelo con **File Manager** a esa misma carpeta, y usa la opción **Extract** del File Manager para descomprimirlo ahí.
+
+4. **Variables de entorno**: en la pantalla de **Setup Python App**, edita la aplicación y agrega en la sección de variables de entorno (mismos nombres que tu `.env`):
+   ```
+   DJANGO_SECRET_KEY=（genera una nueva con el comando de la sección de Render）
+   DEBUG=False
+   ALLOWED_HOSTS=tu-dominio.com
+   CSRF_TRUSTED_ORIGINS=https://tu-dominio.com
+   DB_ENGINE=mysql
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_NAME=cpaneluser_tienda
+   DB_USER=cpaneluser_tiendauser
+   DB_PASSWORD=la-contraseña-que-pusiste-en-mysql-databases
+   WHATSAPP_NUMBER=50585384179
+   STORE_NAME=Tienda K E I
+   STORE_CURRENCY=usd
+   RESERVATION_HOURS=24
+   TIME_ZONE=America/Guatemala
+   DJANGO_SUPERUSER_USERNAME=admin
+   DJANGO_SUPERUSER_EMAIL=tu-correo@ejemplo.com
+   DJANGO_SUPERUSER_PASSWORD=una-contraseña-segura
+   ```
+
+5. **Instala las dependencias sin terminal**: en la misma pantalla de la aplicación, cPanel detecta el `requirements.txt` del proyecto y muestra un botón para instalarlo (a veces aparece como **"Run Pip Install"** junto al archivo detectado). Dale clic ahí — así se instalan Django, gunicorn/passenger, PyMySQL, etc. dentro del entorno virtual que cPanel ya creó.
+
+6. **Reinicia la aplicación** (botón de reiniciar/restart en la misma pantalla) y entra a tu dominio. La primera carga va a tardar un poco más de lo normal porque `passenger_wsgi.py` corre las migraciones y crea el superusuario en ese momento; después de eso ya es instantáneo. Entra a `/panel/login/` con el usuario y contraseña que pusiste en `DJANGO_SUPERUSER_USERNAME`/`DJANGO_SUPERUSER_PASSWORD`.
+
+**Si algo no carga**, cPanel guarda un log de errores de Passenger en la misma pantalla de "Setup Python App" (o en un archivo `stderr.log` dentro del App Root) — ahí se ve el motivo exacto si algo falla.

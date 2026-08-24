@@ -73,8 +73,21 @@ WSGI_APPLICATION = 'virtualshope.wsgi.application'
 # Database
 
 DB_HOST = config('DB_HOST', default='')
+DB_ENGINE = config('DB_ENGINE', default='postgresql')  # 'postgresql' o 'mysql'
 
-if DB_HOST:
+if DB_HOST and DB_ENGINE == 'mysql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': DB_HOST,
+            'PORT': config('DB_PORT', default='3306'),
+            'NAME': config('DB_NAME', default=''),
+            'USER': config('DB_USER', default=''),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'OPTIONS': {'charset': 'utf8mb4'},
+        }
+    }
+elif DB_HOST:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
