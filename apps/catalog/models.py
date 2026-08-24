@@ -3,6 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 
+from apps.core.uploads import product_image_upload_to
+
 
 class Category(models.Model):
     name = models.CharField('nombre', max_length=100, unique=True)
@@ -133,7 +135,7 @@ class ProductVariant(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name='prenda')
-    image = models.ImageField('imagen', upload_to='products/%Y/%m/')
+    image = models.ImageField('imagen', upload_to=product_image_upload_to)
     order = models.PositiveIntegerField('orden', default=0)
 
     class Meta:

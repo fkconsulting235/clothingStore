@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.core.uploads import payment_proof_upload_to
+
 
 class BankAccount(models.Model):
     bank_name = models.CharField('banco', max_length=100)
@@ -35,7 +37,7 @@ class Order(models.Model):
         'estado', max_length=12, choices=STATUS_CHOICES, default=STATUS_PENDING, db_index=True,
     )
     payment_proof = models.ImageField(
-        'comprobante de pago', upload_to='comprobantes/%Y/%m/', blank=True,
+        'comprobante de pago', upload_to=payment_proof_upload_to, blank=True,
     )
     total = models.DecimalField('total', max_digits=10, decimal_places=2, default=0)
     reservation = models.ForeignKey(
