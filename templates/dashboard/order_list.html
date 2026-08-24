@@ -39,7 +39,7 @@
                                 <span class="block">{{ item.quantity }}× {{ item.variant.sku }}</span>
                             {% endfor %}
                         </td>
-                        <td class="px-4 py-3 text-slate-600">${{ order.total }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ STORE_CURRENCY_SYMBOL }}{{ order.total }}</td>
                         <td class="px-4 py-3">
                             {% if order.payment_proof %}
                                 <a href="{{ order.payment_proof.url }}" target="_blank" rel="noopener" class="text-slate-600 hover:text-slate-900 underline">🖼️ Ver foto</a>

@@ -4,7 +4,7 @@
     <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-6 text-center">
         <p class="text-xs uppercase tracking-wide text-amber-600 font-medium mb-2">🕐 Comprobante recibido</p>
         <h1 class="text-xl font-semibold text-slate-900 mb-1">Estamos validando tu pago</h1>
-        <p class="text-sm text-slate-600 mb-6">Pedido #{{ order.id }} · Total ${{ order.total }}. Te confirmaremos apenas revisemos el comprobante.</p>
+        <p class="text-sm text-slate-600 mb-6">Pedido #{{ order.id }} · Total {{ STORE_CURRENCY_SYMBOL }}{{ order.total }}. Te confirmaremos apenas revisemos el comprobante.</p>
 
         <div class="flex flex-col gap-2">
             {% if WHATSAPP_NUMBER %}

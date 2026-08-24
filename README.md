@@ -91,7 +91,7 @@ El proyecto ya está listo para producción: `gunicorn` como servidor WSGI, `whi
    - `ALLOWED_HOSTS`: el dominio que te da Render (ej. `mi-tienda.onrender.com`)
    - `CSRF_TRUSTED_ORIGINS`: `https://mi-tienda.onrender.com` (con `https://`, si no los formularios del sitio van a fallar por CSRF)
    - `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USER` / `DB_PASSWORD`: los mismos de Supabase
-   - `WHATSAPP_NUMBER`, `STORE_NAME`, `STORE_CURRENCY`, `RESERVATION_HOURS`, `TIME_ZONE`: igual que en tu `.env`
+   - `WHATSAPP_NUMBER`, `STORE_NAME`, `STORE_CURRENCY`, `STORE_CURRENCY_SYMBOL`, `RESERVATION_HOURS`, `TIME_ZONE`: igual que en tu `.env`
 5. Deploy. Cuando termine, entra a `https://tu-dominio.onrender.com/panel/` con tu usuario admin (el mismo que ya existe en Supabase, porque la base de datos es la misma).
 
 **Sobre las fotos subidas (prendas y comprobantes de pago)**: por ahora el proyecto guarda esos archivos en el disco del propio servicio de Render, el cual **se borra en cada despliegue o reinicio** (es la opción gratis). Para una demo está bien; cuando el negocio ya esté pagando, agrega un **Persistent Disk** en la configuración del servicio en Render (unos $1/mes por GB) montado en la carpeta `media/` y las fotos dejan de perderse — no requiere ningún cambio de código, solo configurarlo en el dashboard de Render.
@@ -123,6 +123,7 @@ Si tu hosting es cPanel con **Setup Python App** (CloudLinux Python Selector) pe
    WHATSAPP_NUMBER=50585384179
    STORE_NAME=Tienda K E I
    STORE_CURRENCY=usd
+   STORE_CURRENCY_SYMBOL=C$
    RESERVATION_HOURS=24
    TIME_ZONE=America/Guatemala
    DJANGO_SUPERUSER_USERNAME=admin

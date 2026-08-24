@@ -4,7 +4,7 @@
     <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-6">
         <p class="text-xs uppercase tracking-wide text-slate-400 mb-1">{{ variant.product.code }} · {{ variant.color }}/{{ variant.size }}</p>
         <h1 class="text-xl font-semibold text-slate-900 mb-1">Pagar {{ variant.product.name }}</h1>
-        <p class="text-sm text-slate-600 mb-6">${{ variant.price }} c/u. Completa tus datos para ver los datos de pago.</p>
+        <p class="text-sm text-slate-600 mb-6">{{ STORE_CURRENCY_SYMBOL }}{{ variant.price }} c/u. Completa tus datos para ver los datos de pago.</p>
 
         <form method="post" class="space-y-4">
             {% csrf_token %}

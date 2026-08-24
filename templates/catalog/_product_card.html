@@ -9,6 +9,6 @@
     <div class="p-3">
         <p class="text-[11px] text-slate-400 mb-1 tracking-wide">{{ product.code }}</p>
         <h3 class="text-sm font-medium text-slate-900 truncate group-hover:text-slate-700">{{ product.name }}</h3>
-        <p class="text-sm font-semibold text-slate-900 mt-1">${{ product.base_price }}</p>
+        <p class="text-sm font-semibold text-slate-900 mt-1">{{ STORE_CURRENCY_SYMBOL }}{{ product.base_price }}</p>
     </div>
 </a>

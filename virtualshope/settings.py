@@ -155,6 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 WHATSAPP_NUMBER = config('WHATSAPP_NUMBER', default='')
 STORE_NAME = config('STORE_NAME', default='Tienda K E I')
 STORE_CURRENCY = config('STORE_CURRENCY', default='usd')
+STORE_CURRENCY_SYMBOL = config('STORE_CURRENCY_SYMBOL', default='$')
 
 RESERVATION_HOURS = config('RESERVATION_HOURS', default=24, cast=int)
 

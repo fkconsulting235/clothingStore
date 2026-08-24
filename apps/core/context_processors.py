@@ -7,6 +7,7 @@ def store_settings(request):
 
     return {
         'STORE_NAME': settings.STORE_NAME,
+        'STORE_CURRENCY_SYMBOL': settings.STORE_CURRENCY_SYMBOL,
         'WHATSAPP_NUMBER': settings.WHATSAPP_NUMBER,
         'nav_categories': Category.objects.filter(is_active=True).only('name', 'slug', 'order'),
         'cart_count': len(Cart(request)),

@@ -3,7 +3,7 @@
 {% block content %}
     <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-6">
         <p class="text-xs uppercase tracking-wide text-slate-400 mb-1">Pedido #{{ order.id }}</p>
-        <h1 class="text-xl font-semibold text-slate-900 mb-1">Total a pagar: ${{ order.total }}</h1>
+        <h1 class="text-xl font-semibold text-slate-900 mb-1">Total a pagar: {{ STORE_CURRENCY_SYMBOL }}{{ order.total }}</h1>
         <p class="text-sm text-slate-600 mb-6">Haz tu depósito o transferencia a una de estas cuentas y sube la foto o captura del comprobante. Validaremos tu pago y te contactaremos por WhatsApp.</p>
 
         {% if bank_accounts %}
