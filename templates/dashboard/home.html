@@ -5,18 +5,18 @@
     <h1 class="text-xl font-semibold text-slate-900 mb-6">Inicio</h1>
 
     <h2 class="text-sm font-semibold text-slate-900 mb-3">💰 Ventas</h2>
-    <div class="grid grid-cols-3 gap-4 mb-8">
-        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+    <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+        <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 min-w-0 hover:shadow-md hover:-translate-y-0.5 transition-all">
             <p class="text-xs text-slate-500 mb-1">☀️ Vendido hoy</p>
-            <p class="text-2xl font-semibold text-slate-900">{{ STORE_CURRENCY_SYMBOL }}{{ sales_today|money }}</p>
+            <p class="text-base sm:text-2xl font-semibold text-slate-900 truncate">{{ STORE_CURRENCY_SYMBOL }}{{ sales_today|money }}</p>
         </div>
-        <div class="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 min-w-0 hover:shadow-md hover:-translate-y-0.5 transition-all">
             <p class="text-xs text-slate-500 mb-1">📅 Vendido este mes</p>
-            <p class="text-2xl font-semibold text-slate-900">{{ STORE_CURRENCY_SYMBOL }}{{ sales_month|money }}</p>
+            <p class="text-base sm:text-2xl font-semibold text-slate-900 truncate">{{ STORE_CURRENCY_SYMBOL }}{{ sales_month|money }}</p>
         </div>
-        <div class="bg-slate-900 rounded-xl p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <div class="bg-slate-900 rounded-xl p-3 sm:p-4 min-w-0 hover:shadow-md hover:-translate-y-0.5 transition-all">
             <p class="text-xs text-slate-400 mb-1">🏆 Vendido en total</p>
-            <p class="text-2xl font-semibold text-white">{{ STORE_CURRENCY_SYMBOL }}{{ sales_total|money }}</p>
+            <p class="text-base sm:text-2xl font-semibold text-white truncate">{{ STORE_CURRENCY_SYMBOL }}{{ sales_total|money }}</p>
         </div>
     </div>
 
