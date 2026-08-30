@@ -171,3 +171,25 @@ def mark_order_paid(order):
 
         if order.reservation_id:
             Reservation.objects.filter(pk=order.reservation_id).update(status=Reservation.STATUS_CONVERTED)
+
+
+def undo_order_paid(order):
+    """Deshace un "Marcar como pagado" hecho por error: regresa el pedido a
+    Pendiente y devuelve el stock (y la reserva, si venía de una) a como
+    estaban antes."""
+    if order.status != Order.STATUS_PAID:
+        return
+
+    with transaction.atomic():
+        order.status = Order.STATUS_PENDING
+        order.save(update_fields=['status'])
+
+        for item in order.items.select_related('variant'):
+            variant = ProductVariant.objects.select_for_update().get(pk=item.variant_id)
+            variant.stock = variant.stock + item.quantity
+            variant.save(update_fields=['stock'])
+
+        if order.reservation_id:
+            Reservation.objects.filter(
+                pk=order.reservation_id, status=Reservation.STATUS_CONVERTED,
+            ).update(status=Reservation.STATUS_ACTIVE)

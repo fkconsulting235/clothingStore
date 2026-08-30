@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Category, Product
 from apps.orders.models import BankAccount, Order
-from apps.orders.views import mark_order_paid
+from apps.orders.views import mark_order_paid, undo_order_paid
 from apps.reservations.models import Reservation
 
 from .decorators import staff_required
@@ -176,6 +176,15 @@ def order_mark_paid(request, pk):
     order = get_object_or_404(Order, pk=pk)
     mark_order_paid(order)
     messages.success(request, f'Pedido #{order.id} marcado como pagado.')
+    return redirect('dashboard:order_list')
+
+
+@staff_required
+@require_POST
+def order_undo_paid(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    undo_order_paid(order)
+    messages.success(request, f'Pedido #{order.id} regresado a pendiente.')
     return redirect('dashboard:order_list')
 
 

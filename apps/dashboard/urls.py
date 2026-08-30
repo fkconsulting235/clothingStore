@@ -26,6 +26,7 @@ urlpatterns = [
     path('reservas/', views.reservation_list, name='reservation_list'),
     path('pedidos/', views.order_list, name='order_list'),
     path('pedidos/<int:pk>/marcar-pagado/', views.order_mark_paid, name='order_mark_paid'),
+    path('pedidos/<int:pk>/deshacer-pagado/', views.order_undo_paid, name='order_undo_paid'),
     path('pedidos/<int:pk>/rechazar/', views.order_reject, name='order_reject'),
 
     path('cuentas-bancarias/', views.bank_account_list, name='bank_account_list'),
