@@ -9,6 +9,7 @@ from apps.reservations.models import Reservation
 from .cart import Cart
 from .forms import CartCheckoutForm, CheckoutForm, PaymentProofForm
 from .models import BankAccount, Order, OrderItem
+from .notifications import notify_new_order
 
 
 def start_checkout(request, variant_id):
@@ -62,6 +63,7 @@ def pay(request, pk):
         form = PaymentProofForm(request.POST, request.FILES, instance=order)
         if form.is_valid():
             form.save()
+            notify_new_order(request, order)
             return redirect('orders:pending_review', pk=order.pk)
     else:
         form = PaymentProofForm(instance=order)

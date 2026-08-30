@@ -113,6 +113,26 @@ else:
     }
 
 
+# Correo (aviso a la encargada cuando llega un comprobante de pago nuevo)
+
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+STORE_NOTIFICATION_EMAIL = env('STORE_NOTIFICATION_EMAIL')
+
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = env('EMAIL_HOST', default='localhost')
+    EMAIL_PORT = config('EMAIL_PORT', default=465, cast=int)
+    EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+else:
+    # Sin credenciales configuradas (ej. desarrollo local): los correos se
+    # imprimen en la consola en vez de intentar enviarse de verdad.
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'no-reply@localhost'
+
+
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
