@@ -19,7 +19,7 @@
         };
     </script>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-100 text-slate-900 font-sans antialiased">
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-900 font-sans antialiased overflow-x-hidden">
 
 <header class="bg-slate-900 text-slate-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
@@ -30,7 +30,7 @@
             </a>
             <span class="text-slate-500 text-sm">· {{ STORE_NAME }}</span>
         </div>
-        <nav class="flex items-center gap-1 text-sm text-slate-300">
+        <nav class="flex items-center gap-1 text-sm text-slate-300 w-full sm:w-auto min-w-0 overflow-x-auto whitespace-nowrap -mx-4 px-4 sm:mx-0 sm:px-0">
             <a href="{% url 'dashboard:home' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name == 'home' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">🏠 Inicio</a>
             <a href="{% url 'dashboard:product_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name in 'product_list product_create product_edit product_delete' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">👕 Prendas</a>
             <a href="{% url 'dashboard:category_list' %}" class="px-3 py-1.5 rounded-full transition-colors {% if request.resolver_match.url_name in 'category_list category_create category_edit category_delete' %}bg-slate-800 text-white{% else %}hover:text-white hover:bg-slate-800/60{% endif %}">🏷️ Categorías</a>
