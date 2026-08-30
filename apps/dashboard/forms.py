@@ -14,9 +14,10 @@ CHECKBOX_CLASSES = 'h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-s
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'name', 'description', 'base_price', 'is_active']
+        fields = ['category', 'code', 'name', 'description', 'base_price', 'is_active']
         widgets = {
             'category': forms.Select(attrs={'class': INPUT_CLASSES}),
+            'code': forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Se genera solo si lo dejas vacío'}),
             'name': forms.TextInput(attrs={'class': INPUT_CLASSES}),
             'description': forms.Textarea(attrs={'class': INPUT_CLASSES, 'rows': 4}),
             'base_price': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'step': '0.01', 'min': 0}),
@@ -24,6 +25,7 @@ class ProductForm(forms.ModelForm):
         }
         labels = {
             'category': 'Categoría',
+            'code': 'Código',
             'name': 'Nombre',
             'description': 'Descripción',
             'base_price': 'Precio base',
