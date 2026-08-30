@@ -8,6 +8,7 @@
     <p class="text-sm text-slate-500 mb-6">Estas son las cuentas que ve el cliente al pagar por depósito/transferencia. Solo las "Visibles" aparecen en el checkout.</p>
 
     <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
                 <tr>
@@ -45,5 +46,6 @@
                 {% endfor %}
             </tbody>
         </table>
+      </div>
     </div>
 {% endblock %}
