@@ -65,5 +65,59 @@
     {% block content %}{% endblock %}
 </main>
 
+<div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 px-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-sm w-full p-6">
+        <div class="flex items-start gap-3 mb-5">
+            <span class="text-2xl leading-none">⚠️</span>
+            <div>
+                <h2 id="confirm-modal-title" class="text-base font-semibold text-slate-900 mb-1">¿Confirmar acción?</h2>
+                <p id="confirm-modal-message" class="text-sm text-slate-600 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="flex justify-end gap-2">
+            <button type="button" onclick="closeConfirmModal()" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors">Cancelar</button>
+            <button type="button" id="confirm-modal-accept" class="px-4 py-2 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition-colors">Sí, continuar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let confirmModalForm = null;
+
+    function confirmSubmit(form, message, title) {
+        confirmModalForm = form;
+        document.getElementById('confirm-modal-message').textContent = message;
+        document.getElementById('confirm-modal-title').textContent = title || '¿Confirmar acción?';
+        const modal = document.getElementById('confirm-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        return false;
+    }
+
+    function closeConfirmModal() {
+        const modal = document.getElementById('confirm-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        confirmModalForm = null;
+    }
+
+    document.getElementById('confirm-modal-accept').addEventListener('click', function () {
+        if (confirmModalForm) {
+            const form = confirmModalForm;
+            confirmModalForm = null;
+            closeConfirmModal();
+            form.submit();
+        }
+    });
+
+    document.getElementById('confirm-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeConfirmModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeConfirmModal();
+    });
+</script>
+
 </body>
 </html>

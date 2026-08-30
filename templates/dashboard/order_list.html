@@ -69,7 +69,7 @@
                                 </form>
                             {% elif order.status == 'paid' %}
                                 <form method="post" action="{% url 'dashboard:order_undo_paid' order.id %}" class="inline"
-                                      onsubmit="return confirm('¿Regresar este pedido a Pendiente y devolver el stock? Úsalo solo si marcaste \'pagado\' por error.');">
+                                      onsubmit="return confirmSubmit(this, '¿Regresar el pedido #{{ order.id }} a Pendiente y devolver el stock? Úsalo solo si marcaste \'pagado\' por error.', '↩️ Deshacer pago');">
                                     {% csrf_token %}
                                     <button type="submit" class="text-slate-500 hover:text-slate-800 hover:scale-105 transition-transform inline-block">↩️ Deshacer</button>
                                 </form>
