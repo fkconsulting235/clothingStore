@@ -1,0 +1,79 @@
+{% extends "dashboard/base.html" %}
+{% load store_extras %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold text-slate-900 mb-6">💰 Ventas</h1>
+
+    <form method="get" class="flex flex-wrap items-end gap-3 mb-6">
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Período</label>
+            <select name="period" onchange="this.form.submit()" class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+                <option value="" {% if not period %}selected{% endif %}>Todo el tiempo</option>
+                <option value="today" {% if period == 'today' %}selected{% endif %}>Hoy</option>
+                <option value="week" {% if period == 'week' %}selected{% endif %}>Esta semana</option>
+                <option value="month" {% if period == 'month' %}selected{% endif %}>Este mes</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Desde</label>
+            <input type="date" name="date_from" value="{{ date_from }}" class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-500 mb-1">Hasta</label>
+            <input type="date" name="date_to" value="{{ date_to }}" class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+        </div>
+        <button type="submit" class="px-4 py-2 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition-colors">Filtrar</button>
+        {% if period or date_from or date_to %}
+            <a href="{% url 'dashboard:sales_history' %}" class="text-sm text-slate-500 hover:text-slate-700 pb-2">Limpiar filtros</a>
+        {% endif %}
+    </form>
+
+    <div class="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+            <p class="text-xs text-slate-500 mb-1">📦 Pedidos pagados</p>
+            <p class="text-xl sm:text-2xl font-semibold text-slate-900">{{ total_count }}</p>
+        </div>
+        <div class="bg-slate-900 rounded-xl p-4">
+            <p class="text-xs text-slate-400 mb-1">💵 Total vendido</p>
+            <p class="text-xl sm:text-2xl font-semibold text-white truncate">{{ STORE_CURRENCY_SYMBOL }}{{ total_amount|money }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-left text-xs text-slate-500 uppercase tracking-wide">
+                <tr>
+                    <th class="px-4 py-3">Pedido</th>
+                    <th class="px-4 py-3">Cliente</th>
+                    <th class="px-4 py-3">Artículos</th>
+                    <th class="px-4 py-3">Total</th>
+                    <th class="px-4 py-3">Fecha</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for order in orders %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-slate-900">#{{ order.id }}</td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ order.customer_name }}
+                            <span class="block text-xs text-slate-400">{{ order.customer_phone }}</span>
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {% for item in order.items.all %}
+                                <span class="block">{{ item.quantity }}× {{ item.variant.sku }}</span>
+                            {% endfor %}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">{{ STORE_CURRENCY_SYMBOL }}{{ order.total|money }}</td>
+                        <td class="px-4 py-3 text-slate-600">{{ order.created_at }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-4 py-6 text-center text-slate-500">No hay ventas en este período.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

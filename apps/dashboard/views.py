@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import ProtectedError, Q, Sum
@@ -152,6 +154,42 @@ def reservation_list(request):
         'reservations': reservations,
         'status_choices': Reservation.STATUS_CHOICES,
         'selected_status': status,
+    })
+
+
+@staff_required
+def sales_history(request):
+    orders = Order.objects.filter(status=Order.STATUS_PAID).prefetch_related('items__variant__product')
+
+    period = request.GET.get('period', '')
+    date_from = request.GET.get('date_from', '')
+    date_to = request.GET.get('date_to', '')
+    today = timezone.localdate()
+
+    if date_from:
+        orders = orders.filter(created_at__date__gte=date_from)
+    if date_to:
+        orders = orders.filter(created_at__date__lte=date_to)
+
+    if not date_from and not date_to:
+        if period == 'today':
+            orders = orders.filter(created_at__date=today)
+        elif period == 'week':
+            start_of_week = today - timedelta(days=today.weekday())
+            orders = orders.filter(created_at__date__gte=start_of_week)
+        elif period == 'month':
+            orders = orders.filter(created_at__year=today.year, created_at__month=today.month)
+
+    total_amount = orders.aggregate(total=Sum('total'))['total'] or 0
+    total_count = orders.count()
+
+    return render(request, 'dashboard/sales_history.html', {
+        'orders': orders,
+        'period': period,
+        'date_from': date_from,
+        'date_to': date_to,
+        'total_amount': total_amount,
+        'total_count': total_count,
     })
 
 
