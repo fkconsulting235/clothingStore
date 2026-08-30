@@ -84,9 +84,12 @@
 <footer class="border-t border-slate-200 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-sm text-slate-500 flex flex-col sm:flex-row justify-between gap-2">
         <span>&copy; {{ STORE_NAME }}. Todos los derechos reservados.</span>
-        {% if WHATSAPP_NUMBER %}
-            <a href="https://wa.me/{{ WHATSAPP_NUMBER }}" target="_blank" rel="noopener" class="hover:text-slate-900 transition-colors">Escríbenos por WhatsApp</a>
-        {% endif %}
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+            <a href="{% url 'reservations:lookup' %}" class="hover:text-slate-900 transition-colors">📋 Consultar mi reserva</a>
+            {% if WHATSAPP_NUMBER %}
+                <a href="https://wa.me/{{ WHATSAPP_NUMBER }}" target="_blank" rel="noopener" class="hover:text-slate-900 transition-colors">Escríbenos por WhatsApp</a>
+            {% endif %}
+        </div>
     </div>
 </footer>
 

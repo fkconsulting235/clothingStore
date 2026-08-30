@@ -23,3 +23,10 @@ class ReservationForm(forms.ModelForm):
             'customer_phone': 'Teléfono / WhatsApp',
             'quantity': 'Cantidad',
         }
+
+
+class ReservationLookupForm(forms.Form):
+    phone = forms.CharField(
+        label='Tu teléfono / WhatsApp',
+        widget=forms.TextInput(attrs={'placeholder': 'El número con el que reservaste', 'class': INPUT_CLASSES}),
+    )

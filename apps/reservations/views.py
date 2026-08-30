@@ -1,9 +1,10 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from apps.catalog.models import ProductVariant
 
-from .forms import ReservationForm
+from .forms import ReservationForm, ReservationLookupForm
 from .models import Reservation
 
 
@@ -32,3 +33,20 @@ def create_reservation(request, variant_id):
 def reservation_confirmation(request, pk):
     reservation = get_object_or_404(Reservation, pk=pk)
     return render(request, 'reservations/confirmation.html', {'reservation': reservation})
+
+
+def lookup_reservation(request):
+    phone = request.GET.get('phone', '').strip()
+    reservations = []
+    searched = bool(phone)
+
+    if phone:
+        reservations = Reservation.objects.select_related('variant__product').filter(
+            customer_phone=phone, status=Reservation.STATUS_ACTIVE, expires_at__gt=timezone.now(),
+        )
+
+    return render(request, 'reservations/lookup.html', {
+        'form': ReservationLookupForm(initial={'phone': phone}),
+        'reservations': reservations,
+        'searched': searched,
+    })
