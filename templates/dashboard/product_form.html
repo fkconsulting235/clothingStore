@@ -93,15 +93,25 @@
             {% if image_formset.non_form_errors %}
                 <p class="text-xs text-red-600 mb-2">{{ image_formset.non_form_errors|join:", " }}</p>
             {% endif %}
-            <div class="space-y-3">
+            <div class="space-y-4">
                 {% for iform in image_formset %}
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 items-start border-b border-slate-100 pb-3 last:border-0">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 border-b border-slate-100 pb-4 last:border-0">
                         {% for hidden in iform.hidden_fields %}{{ hidden }}{% endfor %}
-                        <div class="sm:col-span-2">{{ iform.image }}</div>
-                        <div>{{ iform.order }}</div>
+                        {% if iform.instance.pk and iform.instance.image %}
+                            <img src="{{ iform.instance.image.url }}" alt="" class="w-16 h-16 rounded-lg object-cover border border-slate-200 shrink-0">
+                        {% endif %}
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs text-slate-400 mb-1">{% if iform.instance.pk %}Reemplazar por otra foto (opcional){% else %}Foto{% endif %}</p>
+                            {{ iform.image }}
+                            {% if iform.image.errors %}<p class="text-xs text-red-600 mt-1">{{ iform.image.errors|join:", " }}</p>{% endif %}
+                        </div>
+                        <div class="w-full sm:w-24 shrink-0">
+                            <p class="text-xs text-slate-400 mb-1">Orden</p>
+                            {{ iform.order }}
+                        </div>
                         {% if iform.instance.pk %}
-                            <label class="flex items-center gap-1.5 text-xs text-slate-500 mt-2">
-                                {{ iform.DELETE }} Eliminar
+                            <label class="flex items-center gap-1.5 text-xs text-slate-500 shrink-0">
+                                {{ iform.DELETE }} Eliminar esta foto
                             </label>
                         {% endif %}
                     </div>

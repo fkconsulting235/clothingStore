@@ -87,7 +87,7 @@ ImageFormSet = inlineformset_factory(
     Product, ProductImage,
     fields=['image', 'order'],
     widgets={
-        'image': forms.ClearableFileInput(attrs={'class': 'text-sm text-slate-700'}),
+        'image': forms.FileInput(attrs={'class': 'text-sm text-slate-700'}),
         'order': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'min': 0}),
     },
     extra=3, can_delete=True,
