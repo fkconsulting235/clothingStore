@@ -77,7 +77,7 @@ VariantFormSet = inlineformset_factory(
     widgets={
         'color': forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Color'}),
         'size': forms.TextInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Talla'}),
-        'price_override': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'step': '0.01', 'placeholder': 'Opcional'}),
+        'price_override': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'step': '0.01', 'placeholder': 'Precio especial'}),
         'stock': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'min': 0}),
     },
     extra=3, can_delete=True,

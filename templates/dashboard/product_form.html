@@ -48,20 +48,34 @@
             {% if variant_formset.non_form_errors %}
                 <p class="text-xs text-red-600 mb-2">{{ variant_formset.non_form_errors|join:", " }}</p>
             {% endif %}
+            <div class="hidden sm:grid sm:grid-cols-5 gap-2 mb-1 px-0.5">
+                <p class="text-xs font-medium text-slate-500">Color</p>
+                <p class="text-xs font-medium text-slate-500">Talla</p>
+                <p class="text-xs font-medium text-slate-500">Precio especial (opcional)</p>
+                <p class="text-xs font-medium text-slate-500">Existencias</p>
+            </div>
             <div class="space-y-3">
                 {% for vform in variant_formset %}
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 items-start border-b border-slate-100 pb-3 last:border-0">
                         {% for hidden in vform.hidden_fields %}{{ hidden }}{% endfor %}
                         <div>
+                            <p class="text-xs text-slate-400 mb-1 sm:hidden">Color</p>
                             {{ vform.color }}
                             {% if vform.color.errors %}<p class="text-xs text-red-600 mt-1">{{ vform.color.errors|join:", " }}</p>{% endif %}
                         </div>
                         <div>
+                            <p class="text-xs text-slate-400 mb-1 sm:hidden">Talla</p>
                             {{ vform.size }}
                             {% if vform.size.errors %}<p class="text-xs text-red-600 mt-1">{{ vform.size.errors|join:", " }}</p>{% endif %}
                         </div>
-                        <div>{{ vform.price_override }}</div>
-                        <div>{{ vform.stock }}</div>
+                        <div>
+                            <p class="text-xs text-slate-400 mb-1 sm:hidden">Precio especial (opcional)</p>
+                            {{ vform.price_override }}
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 mb-1 sm:hidden">Existencias</p>
+                            {{ vform.stock }}
+                        </div>
                         {% if vform.instance.pk %}
                             <label class="flex items-center gap-1.5 text-xs text-slate-500 mt-2">
                                 {{ vform.DELETE }} Eliminar
