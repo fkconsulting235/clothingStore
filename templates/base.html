@@ -56,6 +56,7 @@
 
     <nav class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="flex items-center gap-7 overflow-x-auto py-3 text-xs font-medium uppercase tracking-wider text-slate-600">
+            <a href="{% url 'catalog:by_size' %}" class="whitespace-nowrap text-slate-900 hover:text-slate-600 transition-colors">📏 Por talla</a>
             {% for category in nav_categories %}
                 <a href="{% url 'catalog:category' category.slug %}" class="whitespace-nowrap hover:text-slate-900 transition-colors">{{ category.name }}</a>
             {% empty %}

@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 
-from .models import Category, Product
+from .models import Category, Product, ProductVariant
 
 
 def home(request):
@@ -34,3 +34,21 @@ def search(request):
         ).prefetch_related('images', 'variants')
 
     return render(request, 'catalog/search.html', {'products': products, 'query': query})
+
+
+def by_size(request):
+    size = request.GET.get('talla', '').strip()
+
+    available_sizes = ProductVariant.objects.filter(
+        product__is_active=True,
+    ).order_by('size').values_list('size', flat=True).distinct()
+
+    products = Product.objects.none()
+    if size:
+        products = Product.objects.filter(
+            is_active=True, variants__size__iexact=size,
+        ).distinct().prefetch_related('images', 'variants')
+
+    return render(request, 'catalog/by_size.html', {
+        'products': products, 'selected_size': size, 'available_sizes': available_sizes,
+    })

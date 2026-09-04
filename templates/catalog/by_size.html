@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold text-slate-900 mb-1">Buscar por talla</h1>
+    <p class="text-sm text-slate-500 mb-6">Muestra todas las prendas que tengan esa talla, sin importar la categoría.</p>
+
+    <form method="get" class="flex flex-wrap items-end gap-3 mb-6">
+        <div>
+            <label for="talla-select" class="block text-xs font-medium text-slate-500 mb-1">Talla</label>
+            <select id="talla-select" name="talla" onchange="this.form.submit()" class="rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+                <option value="">Elige una talla…</option>
+                {% for size in available_sizes %}
+                    <option value="{{ size }}" {% if selected_size|lower == size|lower %}selected{% endif %}>{{ size }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    {% if selected_size %}
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for product in products %}
+                {% include "catalog/_product_card.html" %}
+            {% empty %}
+                <p class="text-slate-500 col-span-full">No encontramos prendas con la talla "{{ selected_size }}".</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-slate-500">Elige una talla de la lista para ver todas las prendas disponibles en ese tamaño.</p>
+    {% endif %}
+{% endblock %}
