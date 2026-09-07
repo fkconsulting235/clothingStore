@@ -24,6 +24,7 @@ urlpatterns = [
     path('categorias/<int:pk>/eliminar/', views.category_delete, name='category_delete'),
 
     path('reservas/', views.reservation_list, name='reservation_list'),
+    path('reservas/<int:pk>/cancelar/', views.reservation_cancel, name='reservation_cancel'),
     path('ventas/', views.sales_history, name='sales_history'),
     path('pedidos/', views.order_list, name='order_list'),
     path('pedidos/<int:pk>/marcar-pagado/', views.order_mark_paid, name='order_mark_paid'),

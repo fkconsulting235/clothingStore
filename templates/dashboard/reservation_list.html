@@ -23,6 +23,7 @@
                     <th class="px-4 py-3">Cantidad</th>
                     <th class="px-4 py-3">Estado</th>
                     <th class="px-4 py-3">Vence</th>
+                    <th class="px-4 py-3"></th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
@@ -43,10 +44,19 @@
                             {% endif %}
                         </td>
                         <td class="px-4 py-3 text-slate-600">{{ reservation.expires_at }}</td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            {% if reservation.status == 'active' %}
+                                <form method="post" action="{% url 'dashboard:reservation_cancel' reservation.id %}" class="inline"
+                                      onsubmit="return confirmSubmit(this, 'La prenda queda disponible de nuevo para otros clientes. Úsalo si el cliente ya no la quiere o hay un error.', '❌ Cancelar reserva de {{ reservation.customer_name }}');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-red-600 hover:text-red-800 hover:scale-105 transition-transform inline-block">❌ Cancelar</button>
+                                </form>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6" class="px-4 py-6 text-center text-slate-500">No hay reservas.</td>
+                        <td colspan="7" class="px-4 py-6 text-center text-slate-500">No hay reservas.</td>
                     </tr>
                 {% endfor %}
             </tbody>

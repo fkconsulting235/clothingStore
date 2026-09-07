@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Category, Product
-from apps.orders.models import BankAccount, Order
+from apps.orders.models import BankAccount, Order, OrderItem
 from apps.orders.views import mark_order_paid, undo_order_paid
 from apps.reservations.models import Reservation
 
@@ -95,11 +95,29 @@ def product_form(request, pk=None):
 @staff_required
 def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
+
     if request.method == 'POST':
-        product.delete()
+        try:
+            with transaction.atomic():
+                product.delete()
+        except ProtectedError:
+            messages.error(
+                request,
+                f'No se puede eliminar "{product.code} · {product.name}" porque tiene pedidos registrados '
+                '(ya se compró alguna de sus variantes). Para quitarla de la tienda sin perder ese historial, '
+                'edítala y desmarca "Publicada en la tienda".',
+            )
+            return redirect('dashboard:product_list')
         messages.success(request, f'Se eliminó la prenda {product.code}.')
         return redirect('dashboard:product_list')
-    return render(request, 'dashboard/product_confirm_delete.html', {'product': product})
+
+    has_orders = OrderItem.objects.filter(variant__product=product).exists()
+    active_reservations = Reservation.objects.filter(
+        variant__product=product, status=Reservation.STATUS_ACTIVE,
+    ).count()
+    return render(request, 'dashboard/product_confirm_delete.html', {
+        'product': product, 'has_orders': has_orders, 'active_reservations': active_reservations,
+    })
 
 
 @staff_required
@@ -155,6 +173,16 @@ def reservation_list(request):
         'status_choices': Reservation.STATUS_CHOICES,
         'selected_status': status,
     })
+
+
+@staff_required
+@require_POST
+def reservation_cancel(request, pk):
+    reservation = get_object_or_404(Reservation, pk=pk)
+    reservation.status = Reservation.STATUS_CANCELLED
+    reservation.save(update_fields=['status'])
+    messages.success(request, f'Reserva de {reservation.customer_name} cancelada. La prenda ya vuelve a estar disponible.')
+    return redirect('dashboard:reservation_list')
 
 
 @staff_required
