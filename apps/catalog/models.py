@@ -110,12 +110,11 @@ class ProductVariant(models.Model):
         return f'{self.sku or "(sin sku)"} · {self.color}/{self.size}'
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         if not self.sku:
             color_code = slugify(self.color)[:10].upper()
             size_code = slugify(self.size)[:6].upper()
             self.sku = f'{self.product.code}-{color_code}-{size_code}'
-            super().save(update_fields=['sku'])
+        super().save(*args, **kwargs)
 
     @property
     def price(self):
